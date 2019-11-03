@@ -19,7 +19,7 @@
   </div>
   <div class="citySearch" style="width: 45%; height: 91px" *ngIf="citySearch">
     <label>
-      <input style="width: 100%;height: 66%;font-size: 30px; padding-left: 10px;" type="text" [(ngModel)]="city" >
+      <input style="width: 100%;height: 66%;font-size: 30px; padding-left: 10px;" type="text" [(ngModel)]="city" (keyup.enter)="submit()">
       <a style="position: relative;top: -50px;color: #1086FF;float: right;font-size: 30px;" (click)="submit()">OK</a>
     </label>
   </div>
@@ -60,10 +60,10 @@
       <p style=" opacity: 0.6;">Влажность </p>
       <span style="font-size: 25px">{{humidity}} <small>%</small></span>
     </div>
-    <div>
-      <p style=" opacity: 0.6;">Вероятность дождя</p>
-      <span style="font-size: 25px">10 <small>%</small></span>
-    </div>
+<!--    <div>-->
+<!--      <p style=" opacity: 0.6;">Вероятность дождя</p>-->
+<!--      <span style="font-size: 25px">10 <small>%</small></span>-->
+<!--    </div>-->
   </div>
 
 </div>
