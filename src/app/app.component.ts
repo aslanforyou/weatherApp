@@ -15,9 +15,10 @@ export class AppComponent {
   ngOnInit() {
     this.getWeather(false);
   }
-
+  loading = true;
   citySearch = false;
   city = 'Москва';
+  cityNew = '';
   lat = null;
   lon = null;
   title = 'weatherApp';
@@ -105,13 +106,10 @@ export class AppComponent {
       switch (event.type) {
         case HttpEventType.Sent:
           console.log('Sent ');
-          break;
-        case HttpEventType.DownloadProgress:
-          console.log(`Downloading: ${event.loaded / 1024}Kb`);
+          this.loading = true;
           break;
         case HttpEventType.Response:
           this.warnMsg = null;
-          console.log('Finished', event.body);
           let data = event.body;
           this.temp = String(Math.round(Number(data.main.temp)));
           this.descr = data.weather[0].description;
@@ -123,35 +121,43 @@ export class AppComponent {
           if (coord) {
             this.city = data.name;
           }
+          this.loading = false;
       }
 
     }, (err)=>{
       console.log(err)
+      this.loading = false;
       this.warnMsg = "Please change City";
     });
   }
 
   changeCity() {
-    console.log('ggggg');
     this.citySearch = !this.citySearch;
+    this.cityNew = this.city;
   }
 
   submit() {
-    console.log('submin');
     this.citySearch = !this.citySearch;
+    this.city = this.cityNew;
     this.getWeather(false);
   }
 
   getLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        console.log(position)
-        this.lat = position.coords.latitude;
-        this.lon = position.coords.longitude;
+        this.lat = Math.round(position.coords.latitude*10000)/10000;
+        this.lon = Math.round(position.coords.longitude*10000)/10000;
         this.getWeather(true);
       });
     } else {
-      console.log("Geolocation is not supported by this browser.");
+      console.log('no location')
+      alert("Geolocation is not supported by this browser.");
+    }
+  }
+
+  reset(evnt) {
+    if (this.citySearch && !(!!evnt.target.id && evnt.target.id.indexOf('city')>-1)) {
+      this.citySearch = false;
     }
   }
 
