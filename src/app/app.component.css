@@ -18,4 +18,8 @@ button {
 .details div {
   width: 25%;
 }
+#item:hover {
+  background-color: #498cec !important;
+  color: #FFFFFF !important;
+}
 

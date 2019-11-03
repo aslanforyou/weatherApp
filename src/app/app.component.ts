@@ -19,6 +19,7 @@ export class AppComponent {
   citySearch = false;
   city = 'Москва';
   cityNew = '';
+  cityList = [];
   lat = null;
   lon = null;
   title = 'weatherApp';
@@ -35,6 +36,7 @@ export class AppComponent {
   weatherCond = '50';
   warnMsg = null;
   url = 'https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/weather?';
+  urlFind = 'https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/find?';
 
 
   setUnits(number: number) {
@@ -134,6 +136,7 @@ export class AppComponent {
   changeCity() {
     this.citySearch = !this.citySearch;
     this.cityNew = this.city;
+    this.cityList = [];
   }
 
   submit() {
@@ -159,6 +162,51 @@ export class AppComponent {
     if (this.citySearch && !(!!evnt.target.id && evnt.target.id.indexOf('city')>-1)) {
       this.citySearch = false;
     }
+  }
+
+  findCity() {
+    let params = {
+      'appId': '33664a2595f1e0907eb7bcf07bdd40c4',
+      'q': this.cityNew,
+      'units': this.units,
+      'lang': 'ru',
+    };
+
+    const req = new HttpRequest('GET', this.urlFind, {
+      params: new HttpParams({
+        fromObject: params
+      })
+    });
+
+    this.http.request(req).subscribe((event: HttpEvent<any>) => {
+      switch (event.type) {
+        case HttpEventType.Sent:
+          console.log('Sent ');
+          break;
+        case HttpEventType.Response:
+          let data = event.body;
+          this.cityList = !!data && !!data.list && data.list || [];
+          console.log('find', this.cityList );
+      }
+
+    }, (err)=>{
+      console.log(err)
+    });
+  }
+
+  timeout = 0;
+
+  searchCity() {
+    clearTimeout(this.timeout);
+    this.timeout = setTimeout(()=>{
+      console.log('timeout');
+      this.findCity()
+    },1200)
+  }
+
+  setCity(city) {
+    this.cityNew = city;
+    this.submit()
   }
 
 }
