@@ -16,6 +16,7 @@ export class AppComponent {
     this.getWeather(false);
   }
   loading = true;
+  searchComplete = false;
   citySearch = false;
   city = 'Москва';
   cityNew = '';
@@ -137,6 +138,7 @@ export class AppComponent {
     this.citySearch = !this.citySearch;
     this.cityNew = this.city;
     this.cityList = [];
+    this.searchComplete = false
   }
 
   submit() {
@@ -186,7 +188,7 @@ export class AppComponent {
         case HttpEventType.Response:
           let data = event.body;
           this.cityList = !!data && !!data.list && data.list || [];
-          console.log('find', this.cityList );
+          this.searchComplete = true;
       }
 
     }, (err)=>{
@@ -199,7 +201,6 @@ export class AppComponent {
   searchCity() {
     clearTimeout(this.timeout);
     this.timeout = setTimeout(()=>{
-      console.log('timeout');
       this.findCity()
     },1200)
   }
