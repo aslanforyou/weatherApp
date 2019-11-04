@@ -1,0 +1,32 @@
+<div class="weather">
+  <p class="temp">
+    <img alt="" [src]="getRecapIconPath(forecast.recap)" height="126px">
+    <span>
+        {{forecast.temperature}}°
+      </span>
+  </p>
+  <label class="descr">
+    {{forecast.description}}
+  </label>
+</div>
+
+<div class="details" *ngIf="forecast">
+  <div>
+    <p>Ветер </p>
+    <span>{{forecast.wind.direction}}
+      <small>{{isMetricSystem() ? ' м/c, ' : ' миль/ч, '}}
+        {{getWindowDirectionLabel(forecast.wind)}}</small> </span>
+  </div>
+  <div>
+    <p>Давление </p>
+    <span>{{forecast.pressure}}<small> мм рт. ст.</small></span>
+  </div>
+  <div>
+    <p>Влажность </p>
+    <span>{{forecast.humidity}}<small>%</small></span>
+  </div>
+  <!--    <div>-->
+  <!--      <p>Вероятность дождя</p>-->
+  <!--      <span>10 <small>%</small></span>-->
+  <!--    </div>-->
+</div>

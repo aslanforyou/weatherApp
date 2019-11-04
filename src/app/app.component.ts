@@ -1,20 +1,30 @@
-import {Component} from '@angular/core';
-import {HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpParams, HttpRequest} from "@angular/common/http";
+import {Component, OnInit} from '@angular/core';
+import {HttpClient, HttpEvent, HttpEventType, HttpParams, HttpRequest} from '@angular/common/http';
+import {WeatherService} from './weather.service';
+import {LocationService} from './location.service';
+import {Forecast} from './forecast.model';
+import {TemperatureUnit} from './temperature-unit.model';
+import {Wind} from './wind.model';
+import {environment} from '../environments/environment';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
+export class AppComponent implements OnInit {
 
-export class AppComponent {
-
-  constructor(private http: HttpClient) {
+  constructor(private httpClient: HttpClient,
+              private weatherService: WeatherService,
+              private locationService: LocationService) {
   }
+
+  currentForecast: Forecast;
 
   ngOnInit() {
     this.getWeather(false);
   }
+
   loading = true;
   searchComplete = false;
   searchCProgress = false;
@@ -25,63 +35,24 @@ export class AppComponent {
   lat = null;
   lon = null;
   title = 'weatherApp';
-  units = 'metric';
-  temp = '';
-  descr = '';
-  wind = {
-    deg: null,
-    speed: null,
-    descr: '',
-  };
-  pressure = '';
-  humidity = '';
-  weatherCond = '50';
+  units: TemperatureUnit = TemperatureUnit.C;
   warnMsg = null;
-  url = 'https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/weather?';
-  urlFind = 'https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/find?';
 
-
-  setUnits(number: number) {
-    switch (number) {
-      case 1 : {
-        this.units = 'metric';
-        break;
-      }
-      case 2 : {
-        this.units = 'imperial';
-        break;
-      }
-      default: {
-        this.units = 'metric';
-        break;
-      }
-    }
-    this.getWeather(false);
+  setMetricSystem(): void {
+    this.units = TemperatureUnit.C;
   }
 
-  degToCompass(num) {
-    let val = Math.floor((num / 22.5) + 0.5);
-    let arr = [
-      "северный",
-      "северо-северовосточный",
-      "северовосточный",
-      "востоко-северовосточный",
-      "восточный",
-      "востоко-юговосточный",
-      "юговосточный",
-      "юго-юговосточный",
-      "южный",
-      "юго-югозападный",
-      "югозападный",
-      "западо-югозападный",
-      "западный",
-      "западо-северозападный",
-      "северозападный",
-      "северо-северозападный"
-    ];
-    return arr[(val % 16)];
+  setImperialSystem(): void {
+    this.units = TemperatureUnit.F;
   }
 
+  isImperialSystem(): boolean {
+    return this.units === TemperatureUnit.F;
+  }
+
+  isMetricSystem(): boolean {
+    return this.units === TemperatureUnit.C;
+  }
 
   getWeather(coord) {
     let params = {
@@ -100,13 +71,13 @@ export class AppComponent {
       params.q = this.city;
     }
 
-    const req = new HttpRequest('GET', this.url, {
+    const req = new HttpRequest('GET', `${environment.weatherServiceEndpoint}?`, {
       params: new HttpParams({
         fromObject: params
       })
     });
 
-    this.http.request(req).subscribe((event: HttpEvent<any>) => {
+    this.httpClient.request(req).subscribe((event: HttpEvent<any>) => {
       switch (event.type) {
         case HttpEventType.Sent:
           console.log('Sent ');
@@ -115,23 +86,28 @@ export class AppComponent {
         case HttpEventType.Response:
           this.warnMsg = null;
           let data = event.body;
-          this.temp = String(Math.round(Number(data.main.temp)));
-          this.descr = data.weather[0].description;
-          this.wind.descr = this.degToCompass(data.wind.deg);
-          this.wind.speed = Math.round(data.wind.speed);
-          this.humidity = data.main.humidity;
-          this.pressure = Math.round(data.main.pressure * 0.75006157584566).toString();
-          this.weatherCond = data.weather[0].icon.slice(0, 2);
+
+          let wind: Wind = new Wind(data.wind.deg as number, Math.round(data.wind.speed));
+          this.currentForecast = new Forecast(
+            Math.round(Number(data.main.temp)),
+            TemperatureUnit.C,
+            data.weather[0].description,
+            wind,
+            data.main.humidity as number,
+            data.weather[0].icon.slice(0, 2),
+            Math.round(data.main.pressure * 0.75006157584566),
+            data.name
+          );
           if (coord) {
             this.city = data.name;
           }
           this.loading = false;
       }
 
-    }, (err)=>{
+    }, (err) => {
       console.log(err)
       this.loading = false;
-      this.warnMsg = "Please change City";
+      this.warnMsg = 'Please change City';
     });
   }
 
@@ -148,21 +124,26 @@ export class AppComponent {
     this.getWeather(false);
   }
 
-  getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.lat = Math.round(position.coords.latitude*10000)/10000;
-        this.lon = Math.round(position.coords.longitude*10000)/10000;
-        this.getWeather(true);
-      });
-    } else {
-      console.log('no location')
-      alert("Geolocation is not supported by this browser.");
-    }
+
+  currentLocation() {
+    console.info('getting current location');
   }
 
+  // getLocation() {
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition((position) => {
+  //       this.lat = Math.round(position.coords.latitude*10000)/10000;
+  //       this.lon = Math.round(position.coords.longitude*10000)/10000;
+  //       this.getWeather(true);
+  //     });
+  //   } else {
+  //     console.log('no location');
+  //     alert("Geolocation is not supported by this browser.");
+  //   }
+  // }
+
   reset(evnt) {
-    if (this.citySearch && !(!!evnt.target.id && evnt.target.id.indexOf('city')>-1)) {
+    if (this.citySearch && !(!!evnt.target.id && evnt.target.id.indexOf('city') > -1)) {
       this.citySearch = false;
     }
   }
@@ -176,13 +157,13 @@ export class AppComponent {
       'lang': 'ru',
     };
 
-    const req = new HttpRequest('GET', this.urlFind, {
+    const req = new HttpRequest('GET', `${environment.citySearchServiceEndpoint}?`, {
       params: new HttpParams({
         fromObject: params
       })
     });
 
-    this.http.request(req).subscribe((event: HttpEvent<any>) => {
+    this.httpClient.request(req).subscribe((event: HttpEvent<any>) => {
       switch (event.type) {
         case HttpEventType.Response:
           let data = event.body;
@@ -190,7 +171,7 @@ export class AppComponent {
           this.searchComplete = true;
           this.searchCProgress = false;
       }
-    }, (err)=>{
+    }, (err) => {
       console.log(err)
     });
   }
@@ -199,10 +180,10 @@ export class AppComponent {
 
   searchCity() {
     clearTimeout(this.timeout);
-    this.timeout = setTimeout(()=>{
+    this.timeout = setTimeout(() => {
       this.searchComplete = false;
       this.findCity()
-    },1200)
+    }, 1200)
   }
 
   setCity(city) {

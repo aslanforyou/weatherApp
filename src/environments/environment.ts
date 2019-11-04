@@ -3,7 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  appId: '33664a2595f1e0907eb7bcf07bdd40c4',
+  weatherServiceEndpoint: 'https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/weather',
+  citySearchServiceEndpoint: 'https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/find',
+  locale: 'ru'
 };
 
 /*

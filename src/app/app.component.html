@@ -4,7 +4,7 @@
     <div class="currentCity" *ngIf="!citySearch">
       <p id="city" (click)="changeCity()">{{city}}</p>
       <a id="city2" (click)="changeCity()">Сменить город</a>
-      <a id="location" (click)="getLocation()">
+      <a id="location" (click)="currentLocation()">
         <img class="path" alt="" src="./assets/img/path.png"/>
         Мое местоположение
       </a>
@@ -30,10 +30,10 @@
 
     <div class="units">
       <small>° </small>
-      <button (click)="setUnits(1)" class="{{units == 'metric' ? ' selected ' : ' '}}"
+      <button (click)="setMetricSystem()" class="{{isMetricSystem() ? ' selected ' : ' '}}"
       >C
       </button>
-      <button (click)="setUnits(2)" class="{{units == 'imperial' ? ' selected ' : ' '}}"
+      <button (click)="setImperialSystem()" class="{{isImperialSystem() ? ' selected ' : ' '}}"
       >F
       </button>
     </div>
@@ -56,47 +56,12 @@
     </div>
   </div>
 
-  <div class="weather" *ngIf="descr && !warnMsg && !loading">
-    <p class="temp">
-      <img alt="" src="./assets/img/sun.png" height="126px" *ngIf="weatherCond == '01'">
-      <img alt="" src="./assets/img/cloud.png" height="126px" *ngIf="weatherCond == '03' || weatherCond == '04'">
-      <img alt="" src="./assets/img/rain.png" height="126px" *ngIf="weatherCond == '09' || weatherCond == '10'">
-      <img alt="" src="./assets/img/snow.png" height="126px" *ngIf="weatherCond == '13'">
-      <img alt="" src="./assets/img/partly_cloudy.png" height="126px" *ngIf="weatherCond == '02'">
-      <img alt="" src="./assets/img/strom.png" height="126px" *ngIf="weatherCond == '11'">
-      <span>
-        {{temp}}°
-      </span>
-    </p>
-    <label class="descr">
-      {{descr}}
-    </label>
-  </div>
-
   <div class="warnMsg" *ngIf="warnMsg && !loading">
     {{warnMsg}}
   </div>
 
-  <div class="details" *ngIf="descr && !warnMsg && !loading">
-    <div>
-      <p>Ветер </p>
-      <span>{{wind.speed}}
-        <small>{{units == 'metric' ? ' м/c, ' : ' миль/ч, '}} {{wind.descr}}</small> </span>
-    </div>
-    <div>
-      <p>Давление </p>
-      <span>{{pressure}}<small> мм рт. ст.</small></span>
-    </div>
-    <div>
-      <p>Влажность </p>
-      <span>{{humidity}} <small>%</small></span>
-    </div>
-    <!--    <div>-->
-    <!--      <p>Вероятность дождя</p>-->
-    <!--      <span>10 <small>%</small></span>-->
-    <!--    </div>-->
-  </div>
+  <forecast-box *ngIf="currentForecast" [forecast]="currentForecast"></forecast-box>
+
+
 
 </div>
-
-<!--<router-outlet></router-outlet>-->

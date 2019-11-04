@@ -17,10 +17,6 @@ button {
   border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
-.details div {
-  width: 25%;
-}
-
 #item:hover {
   background-color: #498cec !important;
   color: #FFFFFF !important;
@@ -101,40 +97,6 @@ button {
   width: 80%;
   padding: 10%;
   text-align: center;
-}
-
-.weather {
-  text-align: center;
-  padding: 8%;
-}
-
-.weather p {
-  padding: 0;
-  margin: 0;
-}
-
-.weather p span {
-  vertical-align: top;
-  position: relative;
-  font-size: 126px;
-}
-
-.weather label {
-  padding: 0;
-  margin: 0;
-  font-size: 25px;
-}
-
-.details {
-  display: flex;
-}
-
-.details div p {
-  opacity: 0.6;
-}
-
-.details div span {
-  font-size: 25px
 }
 
 .warnMsg {

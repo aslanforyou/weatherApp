@@ -5,9 +5,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import {FormsModule} from "@angular/forms";
+import {ForecastBoxComponent} from './forecast-box/forecast-box.component';
 
 @NgModule({
   declarations: [
+    ForecastBoxComponent,
     AppComponent
   ],
   imports: [

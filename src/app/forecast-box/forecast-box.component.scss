@@ -1,0 +1,39 @@
+.details div {
+  width: 25%;
+}
+
+.weather {
+  text-align: center;
+  padding: 8%;
+}
+
+.weather p {
+  padding: 0;
+  margin: 0;
+}
+
+.weather p span {
+  vertical-align: top;
+  position: relative;
+  font-size: 126px;
+}
+
+.weather label {
+  padding: 0;
+  margin: 0;
+  font-size: 25px;
+}
+
+.details {
+  display: flex;
+}
+
+.details div p {
+  opacity: 0.6;
+}
+
+.details div span {
+  font-size: 25px
+}
+
+
