@@ -1,80 +1,99 @@
 <div class="root" (click)="reset($event)">
   <div>
-    <div class="currentCity" style="width: 45%; height: 91px; display: block" *ngIf="!citySearch">
-      <p id="city" (click)="changeCity()" style="font-size: 50px; margin: 5px 0 5px 0;">{{city}}</p>
-      <a id="city2" style=" mix-blend-mode: normal; opacity: 0.6; " (click)="changeCity()">Сменить город</a>
-      <a style="padding-left: 30px; opacity: 0.6;" (click)="getLocation()">
-        <img class="path" alt="" src="./assets/img/path.png" style="vertical-align: bottom; padding-right: 5px"/>
+
+    <div class="currentCity" *ngIf="!citySearch">
+      <p id="city" (click)="changeCity()">{{city}}</p>
+      <a id="city2" (click)="changeCity()">Сменить город</a>
+      <a id="location" (click)="getLocation()">
+        <img class="path" alt="" src="./assets/img/path.png"/>
         Мое местоположение
       </a>
     </div>
 
-    <div class="citySearch" style="width: 45%; height: 91px; z-index: 100;display: block" *ngIf="citySearch">
+    <div class="citySearch" *ngIf="citySearch">
       <label>
-        <input id="city3" style="width: 100%;height: 66%;font-size: 30px; padding-left: 10px;" type="text"
+        <input id="city3" type="text"
                [(ngModel)]="cityNew" (keyup.enter)="submit()"
-                (ngModelChange)="searchCity()">
-        <a id="city4" style="position: relative;top: -50px;color: #1086FF;float: right;font-size: 30px; cursor: pointer"
-           (click)="submit()">OK</a>
+               (ngModelChange)="searchCity()">
+        <small *ngIf="searchCProgress"> searching... </small>
+        <a id="city4" (click)="submit()">OK</a>
       </label>
-      <div style=" width: 100%">
-        <div id="item" *ngFor="let item of cityList; let i = index" (click)="setCity(item.name)" style="background: #FFF;color: #000;padding: 5px 15px 5px 20px; width: 100%">
+      <div>
+        <div id="item" *ngFor="let item of cityList; let i = index" (click)="setCity(item.name)">
           {{item.name}} {{item.sys.country}}
         </div>
-        <div style="background: #FFF;color: #000;padding: 5px 15px 5px 20px; width: 100%" *ngIf="cityList.length == 0 && searchComplete">Город не найден</div>
+        <div *ngIf="cityList.length == 0 && searchComplete">
+          Город не найден
+        </div>
       </div>
-
     </div>
 
-    <div class="units" style="width: 94px; height:29px; position: relative; top: -55px;float: right; color: #FFFFFF">
-      <small style="opacity: 0.4">° </small>
+    <div class="units">
+      <small>° </small>
       <button (click)="setUnits(1)" class="{{units == 'metric' ? ' selected ' : ' '}}"
-              style="border-radius: 8px 0px 0px 8px;">C
+      >C
       </button>
       <button (click)="setUnits(2)" class="{{units == 'imperial' ? ' selected ' : ' '}}"
-              style="border-radius: 0px 8px 8px 0px;">F
+      >F
       </button>
     </div>
   </div>
-  <div class="loader" style="width: 80%; padding: 10%; text-align: center"  *ngIf="loading">
-    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+
+  <div class="loader" *ngIf="loading">
+    <div class="lds-spinner">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   </div>
-  <div class="weather" style="z-index: 10; text-align:center; padding: 8%; display: block" *ngIf="descr && !warnMsg && !loading">
-    <p class="temp" style="padding:0; margin:0">
+
+  <div class="weather" *ngIf="descr && !warnMsg && !loading">
+    <p class="temp">
       <img alt="" src="./assets/img/sun.png" height="126px" *ngIf="weatherCond == '01'">
       <img alt="" src="./assets/img/cloud.png" height="126px" *ngIf="weatherCond == '03' || weatherCond == '04'">
       <img alt="" src="./assets/img/rain.png" height="126px" *ngIf="weatherCond == '09' || weatherCond == '10'">
       <img alt="" src="./assets/img/snow.png" height="126px" *ngIf="weatherCond == '13'">
       <img alt="" src="./assets/img/partly_cloudy.png" height="126px" *ngIf="weatherCond == '02'">
       <img alt="" src="./assets/img/strom.png" height="126px" *ngIf="weatherCond == '11'">
-      <span style="vertical-align: top; position: relative; font-size: 126px;">
+      <span>
         {{temp}}°
       </span>
     </p>
-    <label class="descr" style="padding:0; margin:0; font-size: 25px">
+    <label class="descr">
       {{descr}}
     </label>
   </div>
-  <div *ngIf="warnMsg && !loading" style=" text-align: center; font-size: 50px; padding: 8%">
+
+  <div class="warnMsg" *ngIf="warnMsg && !loading">
     {{warnMsg}}
   </div>
-  <div class="details" style="display: flex" *ngIf="descr && !warnMsg && !loading">
+
+  <div class="details" *ngIf="descr && !warnMsg && !loading">
     <div>
-      <p style=" opacity: 0.6;">Ветер </p>
-      <span style="font-size: 25px">{{wind.speed}}
-        <small>{{units == 'metric' ? ' м/c, ' : ' мил/ч, '}} {{wind.descr}}</small> </span>
+      <p>Ветер </p>
+      <span>{{wind.speed}}
+        <small>{{units == 'metric' ? ' м/c, ' : ' миль/ч, '}} {{wind.descr}}</small> </span>
     </div>
     <div>
-      <p style=" opacity: 0.6;">Давление </p>
-      <span style="font-size: 25px">{{pressure}}<small> мм рт. ст.</small></span>
+      <p>Давление </p>
+      <span>{{pressure}}<small> мм рт. ст.</small></span>
     </div>
     <div>
-      <p style=" opacity: 0.6;">Влажность </p>
-      <span style="font-size: 25px">{{humidity}} <small>%</small></span>
+      <p>Влажность </p>
+      <span>{{humidity}} <small>%</small></span>
     </div>
     <!--    <div>-->
-    <!--      <p style=" opacity: 0.6;">Вероятность дождя</p>-->
-    <!--      <span style="font-size: 25px">10 <small>%</small></span>-->
+    <!--      <p>Вероятность дождя</p>-->
+    <!--      <span>10 <small>%</small></span>-->
     <!--    </div>-->
   </div>
 

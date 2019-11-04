@@ -1,8 +1,9 @@
 .currentCity {
   cursor: pointer;
 }
+
 .selected {
-  background-color: rgba(255,255,255,0.4);
+  background-color: rgba(255, 255, 255, 0.4);
   opacity: 1;
 }
 
@@ -13,13 +14,131 @@ button {
   box-sizing: border-box;
   color: white;
   opacity: 0.4;
-  border: 1px solid rgba(255,255,255,0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
+
 .details div {
   width: 25%;
 }
+
 #item:hover {
   background-color: #498cec !important;
   color: #FFFFFF !important;
 }
 
+.currentCity, .citySearch {
+  width: 45%;
+  height: 91px;
+}
+
+.currentCity p {
+  font-size: 50px;
+  margin: 5px 0 5px 0;
+}
+
+#city2 {
+  opacity: 0.6;
+}
+
+#city2 + a {
+  padding-left: 30px;
+  opacity: 0.6;
+}
+
+.path {
+  vertical-align: bottom;
+  padding-right: 5px;
+}
+
+#city3 {
+  width: 100%;
+  height: 66%;
+  font-size: 30px;
+  padding-left: 10px;
+}
+
+#city4 {
+  position: relative;
+  top: -50px;
+  color: #1086FF;
+  float: right;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.citySearch > div {
+  width: 100%;
+}
+
+.citySearch > div > div {
+  background: #FFF;
+  color: #000;
+  padding: 5px 15px 5px 20px;
+}
+
+.units {
+  width: 94px;
+  height: 29px;
+  position: relative;
+  top: -55px;
+  float: right;
+  color: #FFFFFF;
+}
+
+.units + small {
+  opacity: 0.4;
+}
+
+.units button {
+  border-radius: 8px 0px 0px 8px;
+}
+
+.units button:last-child {
+  border-radius: 0px 8px 8px 0px !important;
+}
+
+.loader {
+  width: 80%;
+  padding: 10%;
+  text-align: center;
+}
+
+.weather {
+  text-align: center;
+  padding: 8%;
+}
+
+.weather p {
+  padding: 0;
+  margin: 0;
+}
+
+.weather p span {
+  vertical-align: top;
+  position: relative;
+  font-size: 126px;
+}
+
+.weather label {
+  padding: 0;
+  margin: 0;
+  font-size: 25px;
+}
+
+.details {
+  display: flex;
+}
+
+.details div p {
+  opacity: 0.6;
+}
+
+.details div span {
+  font-size: 25px
+}
+
+.warnMsg {
+  text-align: center;
+  font-size: 50px;
+  padding: 8%;
+}

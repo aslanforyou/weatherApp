@@ -17,6 +17,7 @@ export class AppComponent {
   }
   loading = true;
   searchComplete = false;
+  searchCProgress = false;
   citySearch = false;
   city = 'Москва';
   cityNew = '';
@@ -117,7 +118,7 @@ export class AppComponent {
           this.temp = String(Math.round(Number(data.main.temp)));
           this.descr = data.weather[0].description;
           this.wind.descr = this.degToCompass(data.wind.deg);
-          this.wind.speed = data.wind.speed;
+          this.wind.speed = Math.round(data.wind.speed);
           this.humidity = data.main.humidity;
           this.pressure = Math.round(data.main.pressure * 0.75006157584566).toString();
           this.weatherCond = data.weather[0].icon.slice(0, 2);
@@ -167,6 +168,7 @@ export class AppComponent {
   }
 
   findCity() {
+    this.searchCProgress = true;
     let params = {
       'appId': '33664a2595f1e0907eb7bcf07bdd40c4',
       'q': this.cityNew,
@@ -182,15 +184,12 @@ export class AppComponent {
 
     this.http.request(req).subscribe((event: HttpEvent<any>) => {
       switch (event.type) {
-        case HttpEventType.Sent:
-          console.log('Sent ');
-          break;
         case HttpEventType.Response:
           let data = event.body;
           this.cityList = !!data && !!data.list && data.list || [];
           this.searchComplete = true;
+          this.searchCProgress = false;
       }
-
     }, (err)=>{
       console.log(err)
     });
@@ -201,6 +200,7 @@ export class AppComponent {
   searchCity() {
     clearTimeout(this.timeout);
     this.timeout = setTimeout(()=>{
+      this.searchComplete = false;
       this.findCity()
     },1200)
   }
